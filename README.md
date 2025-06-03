@@ -16,6 +16,38 @@
 
 ❗ This project is in very early development so we don't recommend using this in production. Lots of things will change and we don't have a release schedule yet. Originally, the project was born out of customer demand to make Browser Use more reliable and deterministic.
 
+## 🌐 Browser-Use Web-UI Integration
+
+Workflow-use now includes seamless integration with the official [browser-use web-ui](https://github.com/browser-use/web-ui) for AI-powered browser automation. Instead of reinventing the wheel, we leverage the mature, feature-complete browser-use interface.
+
+### Quick Launch
+
+**PowerShell (Windows):**
+```powershell
+.\launch-browser-use-webui.ps1 -LaunchWorkflowBackend
+```
+
+**Python (Cross-platform):**
+```bash
+python launch-integrated-suite.py --launch-workflow --open-browser
+```
+
+**Bash (Unix/Linux/macOS):**
+```bash
+./launch-browser-use-webui.sh --launch-workflow
+```
+
+### Key Features
+- 🎨 **Professional Gradio Interface** with multi-LLM support
+- 🌐 **8+ LLM Providers**: OpenAI, Anthropic, Google, Azure, DeepSeek, Ollama
+- 🔧 **Advanced Browser Features**: Custom browser, persistent sessions, HD recording
+- 🐳 **Docker Support** with VNC access for browser viewing
+- 📱 **Mobile-Friendly** responsive design
+
+📖 **[Complete Integration Guide →](BROWSER_USE_WEBUI_INTEGRATION.md)**
+
+---
+
 # Quick start
 
 ## Option 1: PowerShell Launcher (Windows - Recommended)
