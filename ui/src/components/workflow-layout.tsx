@@ -24,6 +24,7 @@ import Sidebar from "./sidebar";
 import { NodeConfigMenu } from "./node-config-menu";
 import { PlayButton } from "./play-button";
 import NoWorkflowsMessage from "./no-workflow-message";
+import ChatInterface from "./chat-interface";
 import { $api } from "../lib/api";
 
 const WorkflowLayout: React.FC = () => {
@@ -36,6 +37,7 @@ const WorkflowLayout: React.FC = () => {
   const [savedNodePositions, setSavedNodePositions] = useState<
     Record<string, Record<string, { x: number; y: number }>>
   >({});
+  const [showChat, setShowChat] = useState(false);
   const { fitView } = useReactFlow();
 
   // ----- Queries using $api -----
@@ -213,6 +215,26 @@ const WorkflowLayout: React.FC = () => {
               />
 
               <button
+                title="Open Browser Chat"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2a2a2a] text-white shadow transition-transform duration-200 ease-in-out hover:scale-105 hover:bg-green-500"
+                onClick={() => setShowChat(!showChat)}
+              >
+                {/* Chat icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </button>
+
+              <button
                 title="Refresh workflow"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2a2a2a] text-white shadow transition-transform duration-200 ease-in-out hover:scale-105 hover:bg-blue-500"
                 onClick={async () => {
@@ -250,6 +272,14 @@ const WorkflowLayout: React.FC = () => {
             onClose={closeNodeMenu}
             workflowFilename={selected}
           />
+        )}
+
+        {showChat && (
+          <div className="absolute inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg shadow-xl w-full h-full max-w-6xl max-h-[90vh] m-4">
+              <ChatInterface onClose={() => setShowChat(false)} />
+            </div>
+          </div>
         )}
       </div>
     </div>

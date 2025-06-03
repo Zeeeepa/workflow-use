@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import router
+from .chat_routers import chat_router
 
 app = FastAPI(title='Workflow Execution Service')
 
@@ -17,7 +18,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(router)
-
+app.include_router(chat_router)
 
 # Optional standalone runner
 if __name__ == '__main__':

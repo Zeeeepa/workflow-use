@@ -18,8 +18,10 @@ dependencies = [
     "fastmcp>=2.3.4",
     "typer>=0.15.3",
     "uvicorn>=0.34.2",
+    "langchain-openai>=0.2.0",
+    "langchain-anthropic>=0.2.0",
+    "langchain-google-genai>=2.0.0",
 ]
-
 
 [tool.uv]
 dev-dependencies = [
