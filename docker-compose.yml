@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  workflow-backend:
+    build:
+      context: ./workflows
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - ENVIRONMENT=production
+    volumes:
+      - ./workflows/.env:/app/.env:ro
+      - ./workflows/examples:/app/examples:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - workflow-network
+
+  browser-use-webui:
+    build:
+      context: ./browser-use-web-ui
+      dockerfile: Dockerfile
+    ports:
+      - "7788:7788"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=7788
+      - BROWSER_HEADLESS=true
+      - BROWSER_DISABLE_SECURITY=true
+    volumes:
+      - ./browser-use-web-ui/.env:/app/.env:ro
+      - browser-sessions:/app/sessions
+    depends_on:
+      workflow-backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7788"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - workflow-network
+
+  workflow-ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_WEBUI_URL=http://localhost:7788
+    depends_on:
+      - workflow-backend
+      - browser-use-webui
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - workflow-network
+
+  # Optional: Reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - workflow-backend
+      - browser-use-webui
+      - workflow-ui
+    restart: unless-stopped
+    networks:
+      - workflow-network
+    profiles:
+      - production
+
+  # Optional: Database for workflow storage
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=workflow_use
+      - POSTGRES_USER=workflow_user
+      - POSTGRES_PASSWORD=workflow_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workflow_user -d workflow_use"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - workflow-network
+    profiles:
+      - database
+
+  # Optional: Redis for caching and session storage
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - workflow-network
+    profiles:
+      - cache
+
+volumes:
+  browser-sessions:
+    driver: local
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  workflow-network:
+    driver: bridge
+
