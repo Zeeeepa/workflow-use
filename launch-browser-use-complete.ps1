@@ -268,7 +268,7 @@ function Clone-Repository {
         }
     }
     catch {
-        Write-Error "Error cloning $DisplayName: $($_.Exception.Message)"
+        Write-Error "Error cloning ${DisplayName}: $($_.Exception.Message)"
         return $false
     }
 }
@@ -442,7 +442,7 @@ BROWSER_PERSISTENT=$($PersistentBrowser.ToString().ToLower())
 # Browser Configuration
 BROWSER_TYPE=chromium
 HEADLESS=false
-BROWSER_ARGS=--no-sandbox,--disable-dev-shm-usage
+BROWSER_ARGS=--no-sandbox --disable-dev-shm-usage
 
 # Workflow Configuration
 WORKFLOW_STORAGE_PATH=./workflows
