@@ -1,0 +1,86 @@
+[project]
+name = "workflow-use-suite"
+version = "0.1.0"
+description = "Complete workflow-use suite with browser-use web-ui integration"
+authors = [{ name = "Workflow-Use Team" }]
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+dependencies = [
+    # Core workflow-use dependencies
+    "aiofiles>=24.1.0",
+    "browser-use>=0.2.4",
+    "fastapi>=0.115.12",
+    "fastmcp>=2.3.4",
+    "typer>=0.15.3",
+    "uvicorn>=0.34.2",
+    
+    # Browser automation
+    "playwright>=1.40.0",
+    "patchright>=1.40.0",
+    
+    # LLM integrations
+    "langchain-openai>=0.2.0",
+    "langchain-anthropic>=0.2.0",
+    "langchain-google-genai>=2.0.0",
+    
+    # Web framework
+    "gradio>=4.0.0",
+    "requests>=2.31.0",
+    
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2.2.post1",
+    "ruff>=0.11.8",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[project.scripts]
+workflow-use = "main:main"
+workflow-backend = "main:start_backend"
+workflow-webui = "main:start_webui"
+workflow-suite = "main:start_suite"
+
+[tool.uv]
+dev-dependencies = [
+    "build>=1.2.2.post1",
+    "ruff>=0.11.8",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[tool.ruff]
+line-length = 130
+fix = true
+
+[tool.ruff.lint]
+select = ["ASYNC", "E", "F", "FAST", "I", "PLE"]
+ignore = ["ASYNC109", "E101", "E402", "E501", "F841", "E731"]
+unfixable = ["E101", "E402", "E501", "F841", "E731"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+    "workflows/**/*.py",
+    "ui/dist/**/*",
+    "main.py",
+    "*.md",
+    "*.toml",
+]
+

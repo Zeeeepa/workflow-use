@@ -46,6 +46,8 @@ python launch-integrated-suite.py --launch-workflow --open-browser
 
 📖 **[Complete Integration Guide →](BROWSER_USE_WEBUI_INTEGRATION.md)**
 
+---\n\n## 🚀 Modern UV-Based Deployment\n\nWorkflow-use now supports modern Python deployment using `uv` with a stable virtual environment in the project root and simple commands.\n\n### Quick Start\n\n**Windows (Single Command):**\n```batch\ndeploy.bat\n```\n\n**Manual Commands:**\n```batch\n# Setup environment\nuv sync\n\n# Run components\nuv run python main.py backend    # Backend API only\nuv run python main.py webui      # Browser-use web-ui only  \nuv run python main.py suite      # Complete integrated suite\n```\n\n### Key Benefits\n- 🏠 **Stable .venv Location** - Virtual environment in project root\n- ⚡ **Fast Installation** - uv provides 10-100x faster dependency resolution\n- 🎯 **Simple Commands** - `uv sync` and `uv run main.py`\n- 🔧 **Unified Dependencies** - Single pyproject.toml for all components\n- 📦 **Modern Tooling** - Leverages latest Python packaging standards\n\n📖 **[Complete UV Deployment Guide →](UV_DEPLOYMENT_GUIDE.md)**\n\n---
+
 ---
 
 # Quick start
