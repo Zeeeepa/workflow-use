@@ -1,12 +1,12 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Simple Single Deployment Script for Workflow-Use Suite
-REM Creates START.bat for easy launching
+REM Ultra-Simple Deployment Script for Workflow-Use Suite
+REM Installs dependencies without building packages
 
 echo.
 echo ==========================================
-echo   Workflow-Use Suite - Simple Deploy
+echo   Workflow-Use Suite - Ultra Simple Deploy
 echo ==========================================
 echo.
 
@@ -57,67 +57,51 @@ if not exist ".venv" (
     echo %GREEN%✅ Virtual environment exists%RESET%
 )
 
-REM Install core dependencies only (no docker extras)
-echo %CYAN%📦 Installing core dependencies...%RESET%
+REM Install dependencies directly without building package
+echo %CYAN%📦 Installing dependencies directly...%RESET%
 
-REM Create simplified pyproject.toml with proper package configuration
-(
-echo [project]
-echo name = "workflow-use-suite"
-echo version = "1.0.0"
-echo description = "Workflow automation suite"
-echo requires-python = ">=3.11"
-echo dependencies = [
-echo     "fastapi>=0.104.0",
-echo     "uvicorn[standard]>=0.24.0",
-echo     "pydantic>=2.5.0",
-echo     "playwright>=1.40.0",
-echo     "gradio>=4.0.0",
-echo     "requests>=2.31.0",
-echo     "python-dotenv>=1.0.0",
-echo     "rich>=13.7.0",
-echo     "psutil>=5.9.0",
-echo     "click>=8.1.0",
-echo ]
-echo.
-echo [build-system]
-echo requires = ["hatchling"]
-echo build-backend = "hatchling.build"
-echo.
-echo [tool.hatch.build.targets.wheel]
-echo packages = ["workflow_use"]
-) > pyproject_simple.toml
+REM Install core dependencies one by one
+echo %CYAN%Installing FastAPI...%RESET%
+uv pip install "fastapi>=0.104.0"
+if errorlevel 1 goto :install_error
 
-REM Backup original pyproject.toml if it exists
-if exist "pyproject.toml" (
-    copy pyproject.toml pyproject_backup.toml >nul
-    echo %YELLOW%📋 Backed up original pyproject.toml%RESET%
-)
+echo %CYAN%Installing Uvicorn...%RESET%
+uv pip install "uvicorn[standard]>=0.24.0"
+if errorlevel 1 goto :install_error
 
-REM Use the simple pyproject.toml for installation
-copy pyproject_simple.toml pyproject.toml >nul
+echo %CYAN%Installing Pydantic...%RESET%
+uv pip install "pydantic>=2.5.0"
+if errorlevel 1 goto :install_error
 
-uv sync
-if errorlevel 1 (
-    echo %RED%❌ Failed to install dependencies%RESET%
-    
-    REM Restore original pyproject.toml if backup exists
-    if exist "pyproject_backup.toml" (
-        copy pyproject_backup.toml pyproject.toml >nul
-        echo %YELLOW%🔄 Restored original pyproject.toml%RESET%
-    )
-    
-    pause
-    exit /b 1
-)
-echo %GREEN%✅ Dependencies installed%RESET%
+echo %CYAN%Installing Playwright...%RESET%
+uv pip install "playwright>=1.40.0"
+if errorlevel 1 goto :install_error
 
-REM Restore original pyproject.toml if backup exists
-if exist "pyproject_backup.toml" (
-    copy pyproject_backup.toml pyproject.toml >nul
-    del pyproject_backup.toml >nul
-    echo %GREEN%🔄 Restored original pyproject.toml%RESET%
-)
+echo %CYAN%Installing Gradio...%RESET%
+uv pip install "gradio>=4.0.0"
+if errorlevel 1 goto :install_error
+
+echo %CYAN%Installing Requests...%RESET%
+uv pip install "requests>=2.31.0"
+if errorlevel 1 goto :install_error
+
+echo %CYAN%Installing Python-dotenv...%RESET%
+uv pip install "python-dotenv>=1.0.0"
+if errorlevel 1 goto :install_error
+
+echo %CYAN%Installing Rich...%RESET%
+uv pip install "rich>=13.7.0"
+if errorlevel 1 goto :install_error
+
+echo %CYAN%Installing PSUtil...%RESET%
+uv pip install "psutil>=5.9.0"
+if errorlevel 1 goto :install_error
+
+echo %CYAN%Installing Click...%RESET%
+uv pip install "click>=8.1.0"
+if errorlevel 1 goto :install_error
+
+echo %GREEN%✅ All dependencies installed%RESET%
 
 REM Install browsers
 echo %CYAN%🌐 Installing browsers...%RESET%
@@ -140,7 +124,6 @@ echo import os
 echo import sys
 echo import time
 echo import subprocess
-echo import asyncio
 echo from pathlib import Path
 echo.
 echo def start_backend^(^):
@@ -329,4 +312,12 @@ if /i "%launch_now%"=="y" (
 
 echo.
 pause
+goto :end
+
+:install_error
+echo %RED%❌ Failed to install dependencies%RESET%
+pause
+exit /b 1
+
+:end
 
