@@ -18,6 +18,44 @@
 
 # Quick start
 
+## Option 1: PowerShell Launcher (Windows - Recommended)
+
+For Windows users, we provide a comprehensive PowerShell launcher that sets up everything automatically:
+
+```powershell
+# Download the launcher script
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/browser-use/workflow-use/main/launch-workflow-suite.ps1" -OutFile "launch-workflow-suite.ps1"
+
+# Basic workflow-use setup
+.\launch-workflow-suite.ps1
+
+# Full suite with browser-use web UI and workflow GUI
+.\launch-workflow-suite.ps1 -LaunchWebUI -LaunchWorkflowGUI
+
+# Docker mode with persistent browser
+.\launch-workflow-suite.ps1 -UseDocker -PersistentBrowser -LaunchWebUI
+```
+
+The PowerShell launcher will:
+- ✅ Check all prerequisites
+- ✅ Clone all necessary repositories
+- ✅ Set up Python virtual environments
+- ✅ Install all dependencies (Python packages, Playwright, Node.js)
+- ✅ Build the workflow extension
+- ✅ Configure environment files
+- ✅ Launch the workflow GUI and/or browser-use web UI
+- ✅ Open browsers automatically
+
+**Parameters:**
+- `-LaunchWebUI`: Also launch browser-use web interface
+- `-LaunchWorkflowGUI`: Launch visual workflow editor
+- `-UseDocker`: Use Docker for browser-use components
+- `-PersistentBrowser`: Keep browser open between tasks
+- `-WorkingDirectory`: Custom installation directory
+- `-Help`: Show all available options
+
+## Option 2: Manual Setup
+
 ```bash
 git clone https://github.com/browser-use/workflow-use
 ```
@@ -136,8 +174,13 @@ https://github.com/user-attachments/assets/379e57c7-f03e-4eb9-8184-521377d5c0f9
 - 🔁 **Record Once, Reuse Forever**: Record browser interactions once and replay them indefinitely.
 - ⏳ **Show, don't prompt**: No need to spend hours prompting Browser Use to do the same thing over and over again.
 - ⚙️ **Structured & Executable Workflows**: Converts recordings into deterministic, fast, and reliable workflows which automatically extract variables from forms.
-- 🪄 **Human-like Interaction Understanding**: Intelligently filters noise from recordings to create meaningful workflows.
+- 🫴 **Human-like Interaction Understanding**: Intelligently filters noise from recordings to create meaningful workflows.
 - 🔒 **Enterprise-Ready Foundation**: Built for future scalability with features like self-healing and workflow diffs.
+- 🚀 **PowerShell Launcher**: One-click setup and launch for Windows users with full ecosystem integration.
+- 🌐 **Web UI Integration**: Seamless integration with browser-use web interface for enhanced AI browser control.
+- 🎯 **Visual Workflow Editor**: Interactive GUI for managing, viewing, and executing workflows.
+- 🐳 **Docker Support**: Containerized deployment option for easy scaling and isolation.
+- 🔄 **Multi-LLM Support**: Works with OpenAI, Anthropic, Google, Azure, DeepSeek, Ollama, and more.
 
 # Vision and roadmap
 
